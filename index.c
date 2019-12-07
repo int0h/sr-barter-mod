@@ -47,21 +47,15 @@ function GetEqTypeGenitiveCase(item) {
 }
 
 function CanItemBeBought(item) {
-    if (IsWeapon(item) == 1) {
-        result = 1;
-    } else if (ItemType(item) == t_FuelTanks) {
-        result = 1;
-    } else if (ItemType(item) == t_Engine) {
-        result = 1;
-    } else if (ItemType(item) == t_Radar) {
-        result = 1;
-    } else if (ItemType(item) == t_Scaner) {
-        result = 1;
-    } else if (ItemType(item) == t_RepairRobot) {
-        result = 1;
-    } else if (ItemType(item) == t_CargoHook) {
-        result = 1;
-    } else if (ItemType(item) == t_DefGenerator) {
+    if (IsWeapon(item) == 1
+        || ItemType(item) == t_FuelTanks
+        || ItemType(item) == t_Engine
+        || ItemType(item) == t_Radar
+        || ItemType(item) == t_Scaner
+        || ItemType(item) == t_RepairRobot
+        || ItemType(item) == t_CargoHook
+        || ItemType(item) == t_DefGenerator
+    ) {
         result = 1;
     } else {
         result = 0;
@@ -69,9 +63,9 @@ function CanItemBeBought(item) {
 }
 
 function ListShipItems(ship, isSellerShip, dialogue) {
-    for (count = 0; count < ShipItems(ship); count = count + 1) {
-        if (CanItemBeBought(ShipItems(ship, count)) == 1) {
-            InjectAnswer(dialogue, DeleteTags('<FormatItemName(ShipItems(ship, count))>'), ShipItems(ship, count));
+    for (int i = 0; i < ShipItems(ship); i = i + 1) {
+        if (CanItemBeBought(ShipItems(ship, i)) == 1) {
+            InjectAnswer(dialogue, DeleteTags('<FormatItemName(ShipItems(ship, i))>'), ShipItems(ship, i));
         }
     }
 }
@@ -99,6 +93,7 @@ function IsEqCompatible(item1, item2) {
 }
 
 function GetItemTooBigMesssage(ship, itemToBuy, itemToSell) {
+    Debug(ItemSize(itemToSell) - ItemSize(itemToBuy));
     if (ShipFreeSpace(ship) < ItemSize(itemToSell) - ItemSize(itemToBuy)) {
         result = '- такая махина как ' + FormatItemName(itemToSell) + ' просто не поместится на мой корабль\n';
     } else {
@@ -119,11 +114,11 @@ function GetRejectSaleReason(ship, itemToBuy, itemToSell) {
 }
 
 function ListBarterOptions(itemToBuy, dialogue) {
-    for (count = 0; count < ShipItems(Player()); count = count + 1) {
-        if (IsEqCompatible(itemToBuy, ShipItems(Player(), count)) == 0) {
+    for (int i = 0; i < ShipItems(Player()); i = i + 1) {
+        if (IsEqCompatible(itemToBuy, ShipItems(Player(), i)) == 0) {
             continue;
         }
-        InjectAnswer(dialogue, GetBarterString(itemToBuy, ShipItems(Player(), count)), ShipItems(Player(), count));
+        InjectAnswer(dialogue, GetBarterString(itemToBuy, ShipItems(Player(), i)), ShipItems(Player(), i));
     }
 }
 
