@@ -93,7 +93,6 @@ function IsEqCompatible(item1, item2) {
 }
 
 function GetItemTooBigMesssage(ship, itemToBuy, itemToSell) {
-    Debug(ItemSize(itemToSell) - ItemSize(itemToBuy));
     if (ShipFreeSpace(ship) < ItemSize(itemToSell) - ItemSize(itemToBuy)) {
         result = '- такая махина как ' + FormatItemName(itemToSell) + ' просто не поместится на мой корабль\n';
     } else {
