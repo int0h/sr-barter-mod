@@ -131,6 +131,7 @@ function IsBarterAllowedForShip(ship) {
         shipType == 'Ranger'
         || shipType == 'Pirate'
         || shipType == 'Transport'
+        || shipType == 'Freelancer'
     ) {
         result = 1;
     } else {
