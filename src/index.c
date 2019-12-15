@@ -70,12 +70,35 @@ function ListShipItems(ship, isSellerShip, dialogue) {
     }
 }
 
+function ListGiftItems(dialogue, category) {
+    int i = 0;
+    if (category == 2) {
+        for (i = 0; i < ShipArts(Player()); i = i + 1) {
+            InjectAnswer(dialogue, DeleteTags('<FormatItemName(ShipArts(Player(), i))>'), ShipArts(Player(), i));
+        }
+    } else {
+        for (i = 0; i < ShipItems(Player()); i = i + 1) {
+            if (CanItemBeBought(ShipItems(Player(), i)) == 1) {
+                if (category == 1 && IsWeapon(ShipItems(Player(), i)) == 1) {
+                    InjectAnswer(dialogue, DeleteTags('<FormatItemName(ShipItems(Player(), i))>'), ShipItems(Player(), i));
+                } else if (category == 0 && IsWeapon(ShipItems(Player(), i)) == 0) {
+                    InjectAnswer(dialogue, DeleteTags('<FormatItemName(ShipItems(Player(), i))>'), ShipItems(Player(), i));
+                }
+            }
+        }
+    }
+}
+
 function RoundToThousands(number) {
     result = round(number / 1000 + 1) * 1000;
 }
 
 function GetBarterPrice(itemToBuy, itemToSell) {
-    result = RoundToThousands(max(ItemCost(itemToBuy) - ItemCost(itemToSell), 0) * 3 + ItemCost(itemToBuy) / 2);
+    if (itemToBuy == 0) {
+        result = 0;
+    } else {
+        result = RoundToThousands(max(ItemCost(itemToBuy) - ItemCost(itemToSell), 0) * 3 + ItemCost(itemToBuy) / 2);
+    }
 }
 
 function GetBarterString(itemToBuy, itemToSell) {
@@ -93,7 +116,11 @@ function IsEqCompatible(item1, item2) {
 }
 
 function GetItemTooBigMesssage(ship, itemToBuy, itemToSell) {
-    if (ShipFreeSpace(ship) < ItemSize(itemToSell) - ItemSize(itemToBuy)) {
+    int itemToBuySize = 0;
+    if (itemToBuy != 0) {
+        itemToBuySize = ItemSize(itemToBuy);
+    }
+    if (ShipFreeSpace(ship) < ItemSize(itemToSell) - itemToBuySize) {
         result = '- такая махина как ' + FormatItemName(itemToSell) + ' просто не поместится на мой корабль\n';
     } else {
         result = '';
@@ -157,9 +184,11 @@ function InjectDialog() {
 }
 
 function Barter(ship, itemToBuy, itemToSell) {
-    ShipMoney(Player(), ShipMoney(Player()) - GetBarterPrice(itemToBuy, itemToSell));
-    GetItemFromShip(ship, FindItemInShip(ship, itemToBuy));
-    AddItemToShip(Player(), itemToBuy);
+    if (itemToBuy != 0) {
+        ShipMoney(Player(), ShipMoney(Player()) - GetBarterPrice(itemToBuy, itemToSell));
+        GetItemFromShip(ship, FindItemInShip(ship, itemToBuy));
+        AddItemToShip(Player(), itemToBuy);
+    }
     GetItemFromShip(Player(), FindItemInShip(Player(), itemToSell));
     AddItemToShip(ship, itemToSell);
 }
