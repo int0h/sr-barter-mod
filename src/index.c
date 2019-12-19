@@ -183,13 +183,21 @@ function InjectDialog() {
     }
 }
 
-function Barter(ship, itemToBuy, itemToSell) {
+function GetAnyItemFromShip(ship, item, category) {
+    if (category == 2) {
+        GetArtFromShip(ship, FindItemInShip(ship, item));
+    } else {
+        GetItemFromShip(ship, FindItemInShip(ship, item));
+    }
+}
+
+function Barter(ship, itemToBuy, itemToSell, category) {
     if (itemToBuy != 0) {
         ShipMoney(Player(), ShipMoney(Player()) - GetBarterPrice(itemToBuy, itemToSell));
-        GetItemFromShip(ship, FindItemInShip(ship, itemToBuy));
+        GetAnyItemFromShip(ship, itemToBuy, category);
         AddItemToShip(Player(), itemToBuy);
     }
-    GetItemFromShip(Player(), FindItemInShip(Player(), itemToSell));
+    GetAnyItemFromShip(Player(), itemToSell, category);
     AddItemToShip(ship, itemToSell);
 }
 
