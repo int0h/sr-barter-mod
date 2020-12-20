@@ -23,26 +23,26 @@ function FormatItemName(item) {
 }
 
 function FormatItemNameWithPrice(item) {
-    result = FormatItemName(item) + ' за ' + GetItemPrice(item) + 'cr.';
+    result = Format(CT('Inline.price'), '[targetItem]', FormatItemName(item), '[price]', GetItemPrice(item));
 }
 
 function GetEqTypeGenitiveCase(item) {
     if (ItemType(item) == t_FuelTanks) {
-        result = 'топливного бака';
+        result = CT('Inline.eqTypeGenitiveCase.fuelTanks');
     } else if (ItemType(item) == t_Engine) {
-        result = 'двигателя';
+        result = CT('Inline.eqTypeGenitiveCase.engine');
     } else if (ItemType(item) == t_Radar) {
-        result = 'радара';
+        result = CT('Inline.eqTypeGenitiveCase.radar');
     } else if (ItemType(item) == t_Scaner) {
-        result = 'сканера';
+        result = CT('Inline.eqTypeGenitiveCase.scaner');
     } else if (ItemType(item) == t_RepairRobot) {
-        result = 'дроида';
+        result = CT('Inline.eqTypeGenitiveCase.repairRobot');
     } else if (ItemType(item) == t_CargoHook) {
-        result = 'захвата';
+        result = CT('Inline.eqTypeGenitiveCase.cargoHook');
     } else if (ItemType(item) == t_DefGenerator) {
-        result = 'генератора защитного поля';
+        result = CT('Inline.eqTypeGenitiveCase.defGenerator');
     } else {
-        result = 'оружия';
+        result = CT('Inline.eqTypeGenitiveCase.weapon');
     }
 }
 
@@ -102,7 +102,7 @@ function GetBarterPrice(itemToBuy, itemToSell) {
 }
 
 function GetBarterString(itemToBuy, itemToSell) {
-    result = 'Обменять на ' + DeleteTags(FormatItemName(itemToSell)) + ' и доплатить ' + GetBarterPrice(itemToBuy, itemToSell) + ' cr.';
+    result = Format(CT('Inline.barterWithAdditionalPayment'), '[targetItem]', DeleteTags(FormatItemName(itemToSell)), '[price]', GetBarterPrice(itemToBuy, itemToSell));
 }
 
 function IsEqCompatible(item1, item2) {
@@ -121,7 +121,7 @@ function GetItemTooBigMesssage(ship, itemToBuy, itemToSell) {
         itemToBuySize = ItemSize(itemToBuy);
     }
     if (ShipFreeSpace(ship) < ItemSize(itemToSell) - itemToBuySize) {
-        result = '- такая махина как ' + FormatItemName(itemToSell) + ' просто не поместится на мой корабль\n';
+        result = '- ' + Format(CT('Inline.itemIsTooBig'), '[item]', FormatItemName(itemToSell)) + '\n';
     } else {
         result = '';
     }
@@ -129,7 +129,7 @@ function GetItemTooBigMesssage(ship, itemToBuy, itemToSell) {
 
 function GetItemTooBrokenMesssage(ship, item) {
     if (ItemDurability(item) < 75) {
-        result = '- похоже, что ' + FormatItemName(item) + ' не в лучшем состоянии, мои приборы говорят, что осталось ' + ItemDurability(item) + '% до ремонта\n' ;
+        result = '- ' + Format(CT('Inline.itemIsTooBroken'), '[item]', FormatItemName(item), '[durabilityLeft]', ItemDurability(item)) + '\n';
     } else {
         result = '';
     }
@@ -178,7 +178,7 @@ function InjectDialog() {
     dword ship = GetTalkShip();
     if (ship != 0) {
         if (IsBarterAllowedForShip(ship) == 1) {
-            AddDialogInject('my_dialog', '', "Я хочу предложить бартер", 1);
+            AddDialogInject('my_dialog', '', CT('Inline.suggestBarter'), 1);
         }
     }
 }
